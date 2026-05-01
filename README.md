@@ -9,7 +9,13 @@ pip install recon3d
 recon3d run my_video.mp4
 ```
 
-https://github.com/user-attachments/assets/placeholder-demo.gif
+### Ground Truth vs recon3d Output
+
+![comparison](assets/comparison.gif)
+
+### Novel View Synthesis
+
+![novel views](assets/novel_views.gif)
 
 ## Why?
 
