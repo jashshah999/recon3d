@@ -1,0 +1,56 @@
+[build-system]
+requires = ["setuptools>=64.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "recon3d"
+version = "0.1.0"
+description = "One-command 3D reconstruction from video. No COLMAP needed."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+authors = [
+    {name = "Jash Shah", email = "jash@example.com"},
+]
+keywords = ["3d-reconstruction", "gaussian-splatting", "depth-estimation", "computer-vision", "vggt"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "torch>=2.1",
+    "torchvision>=0.16",
+    "numpy<2",
+    "opencv-python>=4.8",
+    "Pillow>=10.0",
+    "tqdm>=4.60",
+    "huggingface_hub>=0.20",
+    "safetensors>=0.4",
+    "einops>=0.7",
+    "plyfile>=1.0",
+    "viser>=0.2.0",
+    "tyro>=0.7",
+    "click>=8.0",
+]
+
+[project.optional-dependencies]
+vggt = ["vggt"]
+moge = ["moge"]
+gsplat = ["gsplat>=1.0"]
+all = ["recon3d[vggt,moge,gsplat]"]
+dev = ["pytest>=7.0", "ruff>=0.1"]
+
+[project.scripts]
+recon3d = "recon3d.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/jashshah999/recon3d"
+Issues = "https://github.com/jashshah999/recon3d/issues"
+
+[tool.setuptools.packages.find]
+include = ["recon3d*"]
+
+[tool.ruff]
+line-length = 100
