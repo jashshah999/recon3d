@@ -22,6 +22,8 @@ class TrainConfig:
     ssim_weight: float = 0.2
     log_every: int = 500
     densify: bool = True
+    max_gaussians: int = 250_000
+    init_points: int = 150_000
 
 
 def _knn(x: torch.Tensor, k: int = 4) -> torch.Tensor:
@@ -42,13 +44,14 @@ def _init_splats(
     colors: np.ndarray,
     sh_degree: int,
     device: str,
+    max_points: int = 150_000,
 ) -> torch.nn.ParameterDict:
     """Initialize Gaussian splats from a point cloud."""
     pts = torch.from_numpy(points).float().to(device)
     rgbs = torch.from_numpy(colors).float().to(device)
 
-    if len(pts) > 200_000:
-        indices = torch.randperm(len(pts))[:200_000]
+    if len(pts) > max_points:
+        indices = torch.randperm(len(pts))[:max_points]
         pts = pts[indices]
         rgbs = rgbs[indices]
 
@@ -108,8 +111,8 @@ def train_gaussians(
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    print(f"Initializing {len(point_cloud)} Gaussians...")
-    splats = _init_splats(point_cloud, point_colors, config.sh_degree, device)
+    print(f"Initializing from {len(point_cloud)} points (capped at {config.init_points})...")
+    splats = _init_splats(point_cloud, point_colors, config.sh_degree, device, config.init_points)
 
     scene_scale = float(np.percentile(np.linalg.norm(point_cloud, axis=1), 95))
 
@@ -204,7 +207,7 @@ def train_gaussians(
 
         loss.backward()
 
-        if config.densify:
+        if config.densify and len(splats["means"]) < config.max_gaussians:
             strategy.step_post_backward(
                 params=splats, optimizers=optimizers,
                 state=strategy_state, step=step, info=info,

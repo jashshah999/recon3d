@@ -9,13 +9,15 @@ pip install recon3d
 recon3d run my_video.mp4
 ```
 
-### Ground Truth vs recon3d Output
+### Real-World Reconstruction (LLFF Flower, 15 photos, ~2 minutes)
+
+![flower comparison](assets/flower_comparison.gif)
+
+*Left: ground truth input photos. Right: re-rendered from the same viewpoints using recon3d's reconstruction.*
+
+### Synthetic Scene (Ground Truth vs Reconstruction)
 
 ![comparison](assets/comparison.gif)
-
-### Novel View Synthesis
-
-![novel views](assets/novel_views.gif)
 
 ## Why?
 
