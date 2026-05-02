@@ -9,15 +9,19 @@ pip install recon3d
 recon3d run my_video.mp4
 ```
 
+### 360° Novel View Synthesis (Lego, 20 input images)
+
+![lego orbit](assets/lego_orbit_v2.gif)
+
 ### Real-World Reconstruction (LLFF Flower, 15 photos, ~2 minutes)
 
 ![flower comparison](assets/flower_comparison.gif)
 
-*Left: ground truth input photos. Right: re-rendered from the same viewpoints using recon3d's reconstruction.*
+*Left: ground truth photos. Right: Gaussian Splat re-rendered from the same viewpoints.*
 
-### Synthetic Scene (Ground Truth vs Reconstruction)
+### Training View Comparison (Lego)
 
-![comparison](assets/comparison.gif)
+![lego comparison](assets/lego_comparison.gif)
 
 ## Why?
 
