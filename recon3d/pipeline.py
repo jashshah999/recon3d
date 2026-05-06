@@ -227,6 +227,19 @@ def reconstruct(
     if mesh_path:
         print(f"  Mesh:       {mesh_path}")
 
+    # Export to standard formats (COLMAP, nerfstudio)
+    print("\nExporting to standard formats...")
+    try:
+        from .exporters import export_all
+        c2w_poses = np.linalg.inv(extrinsics)
+        export_all(
+            c2w_poses, intrinsics, image_paths,
+            point_cloud, point_colors, str(output_dir),
+            image_sizes=[(d.shape[0], d.shape[1]) for d in depth_maps if d is not None and d.size > 10] or None,
+        )
+    except Exception as e:
+        print(f"  Export failed: {e}")
+
     if config.launch_viewer:
         print("\nLaunching viewer...")
         try:
