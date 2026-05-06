@@ -2,7 +2,6 @@
 
 import numpy as np
 import torch
-from pathlib import Path
 from typing import Optional
 from dataclasses import dataclass
 
@@ -45,7 +44,7 @@ def estimate_poses_vggt(
 
     dtype = torch.bfloat16 if torch.cuda.get_device_capability()[0] >= 8 else torch.float16
 
-    print(f"Loading VGGT model...")
+    print("Loading VGGT model...")
     model = VGGT.from_pretrained("facebook/VGGT-1B").to(device)
 
     n_images = len(image_paths)
@@ -64,7 +63,7 @@ def estimate_poses_vggt(
         images = load_and_preprocess_images(batch_paths).to(device)
 
         with torch.no_grad():
-            with torch.cuda.amp.autocast(dtype=dtype):
+            with torch.amp.autocast("cuda", dtype=dtype):
                 predictions = model(images)
 
         pose_enc = predictions["pose_enc"]
@@ -151,7 +150,6 @@ def estimate_poses_mast3r(
     from mast3r.cloud_opt.sparse_ga import sparse_global_alignment
     import mast3r.utils.path_to_dust3r  # noqa
     from dust3r.utils.image import load_images
-    from dust3r.inference import inference
 
     if cache_dir is None:
         cache_dir = tempfile.mkdtemp(prefix="recon3d_mast3r_")

@@ -3,7 +3,6 @@
 import numpy as np
 import torch
 import cv2
-from typing import Optional
 
 
 def align_to_metric(

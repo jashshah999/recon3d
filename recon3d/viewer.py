@@ -1,8 +1,6 @@
 """Interactive 3D viewer using viser."""
 
 import numpy as np
-import torch
-from pathlib import Path
 from typing import Optional
 
 
@@ -37,7 +35,6 @@ def launch_viewer(
     vertex = plydata["vertex"]
     positions = np.stack([vertex["x"], vertex["y"], vertex["z"]], axis=-1)
 
-    has_color = "red" in vertex or "f_dc_0" in vertex
     if "red" in vertex:
         colors = np.stack(
             [vertex["red"], vertex["green"], vertex["blue"]], axis=-1

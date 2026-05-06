@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=64.0"]
+requires = ["setuptools>=68.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -12,7 +12,7 @@ requires-python = ">=3.10"
 authors = [
     {name = "Jash Shah", email = "jash@example.com"},
 ]
-keywords = ["3d-reconstruction", "gaussian-splatting", "depth-estimation", "computer-vision", "vggt"]
+keywords = ["3d-reconstruction", "gaussian-splatting", "depth-estimation", "computer-vision", "vggt", "nerf", "sfm"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Science/Research",
@@ -33,13 +33,17 @@ dependencies = [
     "viser>=0.2.0",
     "tyro>=0.7",
     "click>=8.0",
+    "scipy>=1.10",
+    "scikit-learn>=1.3",
 ]
 
 [project.optional-dependencies]
 vggt = ["vggt"]
 moge = ["moge"]
 gsplat = ["gsplat>=1.0"]
-all = ["recon3d[vggt,moge,gsplat]"]
+factor-graph = ["gtsam>=4.2"]
+mesh = ["open3d>=0.17"]
+all = ["recon3d[vggt,moge,gsplat,factor-graph,mesh]"]
 dev = ["pytest>=7.0", "ruff>=0.1"]
 
 [project.scripts]
