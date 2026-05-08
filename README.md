@@ -12,25 +12,11 @@ pip install recon3d[all]
 recon3d run my_video.mp4
 ```
 
-### 360 Novel View Synthesis (Lego, 20 input images)
-
-![lego orbit](assets/lego_orbit_v2.gif)
-
-### Real-World Reconstruction (LLFF Flower, 15 photos, ~2 minutes)
-
-![flower comparison](assets/flower_comparison.gif)
-
-*Left: ground truth photos. Right: Gaussian Splat re-rendered from the same viewpoints.*
-
-### Real-World Office Scene (15 images → 250k Gaussians in 5 minutes)
+### Real-World Office (15 images → 250k Gaussians, 5 minutes, one command)
 
 ![demo](assets/demo_final.gif)
 
-*Left: input frames. Right: 3D Gaussian Splat rendered from the same camera poses. 15 input images, 250k Gaussians, 20k training steps, ~5 min on NVIDIA L4. One command, zero config.*
-
-### Training View Comparison (Lego)
-
-![lego comparison](assets/lego_comparison.gif)
+*Left: input frames. Right: 3DGS rendered from the same cameras. 250k Gaussians, NVIDIA L4, zero configuration.*
 
 ## Why?
 
