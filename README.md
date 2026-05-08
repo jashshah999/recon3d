@@ -22,17 +22,11 @@ recon3d run my_video.mp4
 
 *Left: ground truth photos. Right: Gaussian Splat re-rendered from the same viewpoints.*
 
-### Real-World Office Scene (25 images → 3D Gaussian Splat in 3 minutes)
+### Real-World Office Scene (15 images → 250k Gaussians in 5 minutes)
 
-**Input vs 3DGS Render (side-by-side):**
+![demo](assets/demo_final.gif)
 
-![comparison](assets/demo_comparison.gif)
-
-**Novel view orbit through the reconstructed scene:**
-
-![orbit](assets/demo_orbit.gif)
-
-*25 input images from an office walkthrough, 177k Gaussians, ~3 minutes end-to-end on NVIDIA L4 GPU. Zero configuration, one command.*
+*Left: input frames. Right: 3D Gaussian Splat rendered from the same camera poses. 15 input images, 250k Gaussians, 20k training steps, ~5 min on NVIDIA L4. One command, zero config.*
 
 ### Training View Comparison (Lego)
 
