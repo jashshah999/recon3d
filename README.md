@@ -22,6 +22,12 @@ recon3d run my_video.mp4
 
 *Left: ground truth photos. Right: Gaussian Splat re-rendered from the same viewpoints.*
 
+### Real-World Office Scene (40 frames from phone video, 200 seconds total)
+
+![office demo](assets/demo_result.png)
+
+*Left: ground truth frame. Right: Gaussian Splat rendered from the same viewpoint. 25 input images, 3000 training steps, 177k Gaussians, ~3 minutes end-to-end on L4 GPU.*
+
 ### Training View Comparison (Lego)
 
 ![lego comparison](assets/lego_comparison.gif)
@@ -51,7 +57,9 @@ No COLMAP. No CUDA compilation nightmares. No feature matching. One pip install.
 - **Fast** -- Minutes, not hours. VGGT processes 100 frames in ~3 seconds on an H100
 - **Mesh export** -- TSDF fusion for triangle mesh output (`--mesh`)
 - **Interactive viewer** -- Built-in web viewer via viser
-- **Multiple exports** -- .ply, .splat, .obj mesh, checkpoints
+- **Multiple exports** -- .ply, .splat, .obj mesh, COLMAP sparse model, nerfstudio transforms.json
+- **Works on 8GB GPUs** -- Auto-adjusts chunk size for your VRAM
+- **COLMAP format output** -- Feed directly into any 3DGS pipeline (splatfacto, sugar, 2DGS)
 
 ## Quick Start
 
