@@ -8,7 +8,9 @@
 Turn any phone video or set of images into a 3D Gaussian Splat -- with metric scale, in minutes, on a single GPU.
 
 ```bash
-pip install recon3d[all]
+git clone https://github.com/jashshah999/recon3d.git && cd recon3d
+pip install -e ".[all]"
+pip install git+https://github.com/facebookresearch/vggt.git
 recon3d run my_video.mp4
 ```
 
@@ -52,23 +54,22 @@ No COLMAP. No CUDA compilation nightmares. No feature matching. One pip install.
 ### Install
 
 ```bash
-# Everything (recommended)
-pip install recon3d[all]
-
-# Or pick what you need
-pip install recon3d[vggt]          # VGGT for pose estimation
-pip install recon3d[moge]          # MoGe-2 for metric scale
-pip install recon3d[gsplat]        # gsplat for Gaussian Splatting
-pip install recon3d[factor-graph]  # GTSAM for long-sequence refinement
-pip install recon3d[mesh]          # Open3D for mesh export
-```
-
-From source:
-
-```bash
 git clone https://github.com/jashshah999/recon3d.git
 cd recon3d
 pip install -e ".[all]"
+
+# VGGT (pose estimation) — must be installed from source
+pip install git+https://github.com/facebookresearch/vggt.git
+
+# MoGe-2 (metric depth) — must be installed from source
+pip install git+https://github.com/microsoft/MoGe.git
+```
+
+Optional extras (if not using `[all]`):
+```bash
+pip install -e ".[gsplat]"        # gsplat for Gaussian Splatting
+pip install -e ".[factor-graph]"  # GTSAM for long-sequence refinement
+pip install -e ".[mesh]"          # Open3D for mesh export
 ```
 
 ### Reconstruct from video

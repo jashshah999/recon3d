@@ -38,12 +38,10 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-vggt = ["vggt"]
-moge = ["moge"]
 gsplat = ["gsplat>=1.0"]
 factor-graph = ["gtsam>=4.2"]
 mesh = ["open3d>=0.17"]
-all = ["recon3d[vggt,moge,gsplat,factor-graph,mesh]"]
+all = ["recon3d[gsplat,factor-graph,mesh]"]
 dev = ["pytest>=7.0", "ruff>=0.1"]
 
 [project.scripts]
