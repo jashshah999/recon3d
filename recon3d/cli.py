@@ -29,6 +29,9 @@ def main():
               help="Frames per VGGT chunk for long sequences.")
 @click.option("--no-metric", is_flag=True, default=False,
               help="Skip metric scale alignment (faster, but no real-world scale).")
+@click.option("--metric-model", type=str, default="moge-2", show_default=True,
+              help="Model for metric scale: moge-2, moge-3, moge-3-vitg, or a MoGe "
+                   "Hugging Face repo/checkpoint path.")
 @click.option("--no-viewer", is_flag=True, default=False,
               help="Don't launch the interactive viewer after reconstruction.")
 @click.option("--no-factor-graph", is_flag=True, default=False,
@@ -44,7 +47,7 @@ def main():
 @click.option("--device", type=str, default="cuda",
               help="Device to use (cuda or cpu).")
 def run(input_path, output_dir, pose_method, max_frames, fps, steps,
-        resize, chunk_size, no_metric, no_viewer, no_factor_graph, isam2,
+        resize, chunk_size, no_metric, metric_model, no_viewer, no_factor_graph, isam2,
         loop_threshold, robust_kernel, mesh, device):
     """Reconstruct a 3D scene from a video or image directory.
 
@@ -60,10 +63,19 @@ def run(input_path, output_dir, pose_method, max_frames, fps, steps,
 
         recon3d run my_video.mp4 --no-metric --max-frames 50
 
+        recon3d run my_video.mp4 --metric-model moge-3
+
         recon3d run long_video.mp4 --max-frames 200 --mesh
     """
     from .pipeline import reconstruct, PipelineConfig
     from .gaussian_train import TrainConfig
+    from .metric_align import resolve_metric_model
+
+    if not no_metric:
+        try:
+            resolve_metric_model(metric_model)
+        except ValueError as e:
+            raise click.BadParameter(str(e), param_hint="--metric-model")
 
     if output_dir is None:
         input_name = Path(input_path).stem
@@ -80,6 +92,7 @@ def run(input_path, output_dir, pose_method, max_frames, fps, steps,
         loop_closure_threshold=loop_threshold,
         robust_kernel=robust_kernel,
         metric_align=not no_metric,
+        metric_model=metric_model,
         train_config=TrainConfig(max_steps=steps),
         export_mesh=mesh,
         launch_viewer=not no_viewer,
@@ -94,7 +107,7 @@ Output:       {output_dir}
 Pose method:  {pose_method}
 Max frames:   {max_frames}
 Train steps:  {steps}
-Metric align: {not no_metric}
+Metric align: {f"{metric_model}" if not no_metric else False}
 Factor graph: {not no_factor_graph}
 Mesh export:  {mesh}
 Device:       {device}
@@ -155,7 +168,8 @@ def check():
     backends = {
         "VGGT": "vggt",
         "MASt3R": "mast3r",
-        "MoGe-2": "moge",
+        "MoGe (metric scale)": "moge",
+        "MoGe-3": "moge.model.v3",
         "gsplat": "gsplat",
         "GTSAM": "gtsam",
         "Open3D": "open3d",
@@ -168,6 +182,8 @@ def check():
             print(f"  {name}: installed")
         except ImportError:
             print(f"  {name}: not installed")
+        except Exception as e:  # e.g. MoGe-3's FlexGEMM without a CUDA GPU
+            print(f"  {name}: installed but not usable ({e})")
 
 
 if __name__ == "__main__":

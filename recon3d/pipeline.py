@@ -39,6 +39,7 @@ class PipelineConfig:
     # Metric alignment (only for VGGT which outputs relative scale)
     metric_align: bool = True
     n_metric_reference_frames: int = 5
+    metric_model: str = "moge-2"  # "moge-2", "moge-3", "moge-3-vitg", or a MoGe repo/path
 
     # Gaussian splatting
     train_config: TrainConfig = field(default_factory=TrainConfig)
@@ -181,6 +182,7 @@ def reconstruct(
             depth_maps,
             device=config.device,
             n_reference_frames=config.n_metric_reference_frames,
+            metric_model=config.metric_model,
         )
         print("Metric alignment complete")
     else:

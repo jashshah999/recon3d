@@ -31,7 +31,7 @@ Every 3D Gaussian Splatting pipeline today requires COLMAP for camera pose estim
 Meanwhile, feed-forward models like [VGGT](https://github.com/facebookresearch/vggt) (CVPR 2025 Best Paper) can estimate poses in seconds. **recon3d** connects the dots:
 
 ```
-Video/Images --> VGGT (poses) --> Factor Graph (refinement) --> MoGe-2 (metric) --> gsplat (training) --> .ply + viewer
+Video/Images --> VGGT (poses) --> Factor Graph (refinement) --> MoGe-2/3 (metric) --> gsplat (training) --> .ply + viewer
 ```
 
 No COLMAP. No CUDA compilation nightmares. No feature matching. One pip install. One command.
@@ -40,7 +40,7 @@ No COLMAP. No CUDA compilation nightmares. No feature matching. One pip install.
 
 - **No COLMAP** -- Uses VGGT or MASt3R for camera pose estimation
 - **Scales to long videos** -- Automatic chunking + factor graph refinement for 100-300+ frame sequences
-- **Metric scale** -- Real-world units via MoGe-2 alignment
+- **Metric scale** -- Real-world units via MoGe-2 (default) or MoGe-3 alignment (`--metric-model moge-3`)
 - **One command** -- Video in, Gaussian Splat out
 - **Fast** -- Minutes, not hours. VGGT processes 100 frames in ~3 seconds on an H100
 - **Mesh export** -- TSDF fusion for triangle mesh output (`--mesh`)
@@ -61,7 +61,7 @@ pip install -e ".[all]"
 # VGGT (pose estimation) — must be installed from source
 pip install git+https://github.com/facebookresearch/vggt.git
 
-# MoGe-2 (metric depth) — must be installed from source
+# MoGe (metric depth, MoGe-2 and MoGe-3) — must be installed from source
 pip install git+https://github.com/microsoft/MoGe.git
 ```
 
@@ -143,6 +143,7 @@ Options:
   --resize INT                  Resize long edge in pixels (default: 960)
   --chunk-size INT              Frames per VGGT chunk for long sequences (default: 20)
   --no-metric                   Skip metric alignment (faster)
+  --metric-model TEXT           moge-2 (default), moge-3, moge-3-vitg, or a MoGe repo/path
   --no-viewer                   Don't launch viewer after reconstruction
   --no-factor-graph             Disable factor graph refinement
   --mesh                        Export triangle mesh (.obj) via TSDF fusion
@@ -220,7 +221,8 @@ Models are downloaded automatically from HuggingFace on first run:
 | Model | Size | License | Used For |
 |-------|------|---------|----------|
 | [VGGT-1B](https://huggingface.co/facebook/VGGT-1B) | 1B params | Meta Research | Pose estimation |
-| [MoGe-2-ViT-L](https://huggingface.co/Ruicheng/moge-2-vitl) | 326M params | MIT | Metric alignment |
+| [MoGe-2-ViT-L](https://huggingface.co/Ruicheng/moge-2-vitl) | 326M params | MIT | Metric alignment (default) |
+| [MoGe-3-ViT-L](https://huggingface.co/Ruicheng/moge-3-vitl) | 370M params | MIT | Metric alignment (`--metric-model moge-3`) |
 | [MASt3R-ViT-L](https://huggingface.co/naver/MASt3R_ViTLarge_BaseDecoder_512_catmlpdpt_metric) | ~1B params | CC BY-NC-SA 4.0 | Alt. pose estimation |
 
 ## Troubleshooting
@@ -237,7 +239,8 @@ Models are downloaded automatically from HuggingFace on first run:
 
 ## Limitations
 
-- VGGT outputs relative scale -- metric alignment via MoGe-2 is approximate (typically within 10-20% of ground truth)
+- VGGT outputs relative scale -- metric alignment via MoGe is approximate (typically within 10-20% of ground truth)
+- MoGe-3 needs a CUDA GPU (its FlexGEMM/Triton kernels won't import without one); with `--device cpu` it runs without its sparse refinement step
 - Quality may be slightly lower than COLMAP-based pipelines on some scenes (~1-2 dB PSNR), but 10-100x faster
 - Dynamic objects in the scene will cause artifacts
 - Very large scenes (building-scale) may need frame subsampling
@@ -247,7 +250,7 @@ Models are downloaded automatically from HuggingFace on first run:
 Built on the shoulders of giants:
 - [VGGT](https://github.com/facebookresearch/vggt) -- Meta (CVPR 2025 Best Paper)
 - [gsplat](https://github.com/nerfstudio-project/gsplat) -- Nerfstudio team
-- [MoGe-2](https://github.com/microsoft/MoGe) -- Microsoft
+- [MoGe-2 / MoGe-3](https://github.com/microsoft/MoGe) -- Microsoft
 - [MASt3R](https://github.com/naver/mast3r) -- Naver Labs
 - [GTSAM](https://gtsam.org/) -- Georgia Tech
 - [3D Gaussian Splatting](https://github.com/graphdeco-inria/gaussian-splatting) -- INRIA
